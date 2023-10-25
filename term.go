@@ -24,7 +24,7 @@ import (
 	"math/rand"
 	"strings"
 
-	rdf "github.com/deiu/gon3"
+	rdf "github.com/cem-okulmus/gon3-1"
 	jsonld "github.com/linkeddata/gojsonld"
 )
 
