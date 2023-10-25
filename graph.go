@@ -206,6 +206,7 @@ func (g *Graph) Parse(reader io.Reader, mime string) error {
 			return err
 		}
 		for s := range parser.IterTriples() {
+			fmt.Println("Gotten from Parser: ", s.Subject.String(), " ", s.Predicate.String(), " ", s.Object.String())
 			g.AddTriple(rdf2term(s.Subject), rdf2term(s.Predicate), rdf2term(s.Object))
 		}
 	} else {

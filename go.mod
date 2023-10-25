@@ -1,4 +1,4 @@
-module github.com/deiu/rdf2go
+module github.com/cem-okulmus/rdf2go-1
 
 go 1.19
 
