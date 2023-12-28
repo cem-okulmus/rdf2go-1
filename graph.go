@@ -9,13 +9,14 @@ import (
 	"io"
 	"net/http"
 
-	rdf "github.com/cem-okulmus/gon3-1"
 	jsonld "github.com/linkeddata/gojsonld"
+
+	rdf "github.com/cem-okulmus/gon3-1"
 )
 
 // Graph structure
 type Graph struct {
-	triples    map[*Triple]bool
+	triples    []*Triple
 	httpClient *http.Client
 	uri        string
 	term       Term
@@ -40,7 +41,7 @@ func NewGraph(uri string, skipVerify ...bool) *Graph {
 		skip = skipVerify[0]
 	}
 	g := &Graph{
-		triples:    make(map[*Triple]bool),
+		// triples:    make(map[*Triple]bool),
 		httpClient: NewHttpClient(skip),
 		uri:        uri,
 		term:       NewResource(uri),
@@ -107,7 +108,7 @@ func (g *Graph) One(s Term, p Term, o Term) *Triple {
 func (g *Graph) IterTriples() (ch chan *Triple) {
 	ch = make(chan *Triple)
 	go func() {
-		for triple := range g.triples {
+		for _, triple := range g.triples {
 			ch <- triple
 		}
 		close(ch)
@@ -117,18 +118,20 @@ func (g *Graph) IterTriples() (ch chan *Triple) {
 
 // Add is used to add a Triple object to the graph
 func (g *Graph) Add(t *Triple) {
-	g.triples[t] = true
+	// g.triples[t] = true
+	g.triples = append(g.triples, t)
 }
 
 // AddTriple is used to add a triple made of individual S, P, O objects
 func (g *Graph) AddTriple(s Term, p Term, o Term) {
-	g.triples[NewTriple(s, p, o)] = true
+	// g.triples[NewTriple(s, p, o)] = true
+	g.triples = append(g.triples, NewTriple(s, p, o))
 }
 
-// Remove is used to remove a Triple object
-func (g *Graph) Remove(t *Triple) {
-	delete(g.triples, t)
-}
+// // Remove is used to remove a Triple object
+// func (g *Graph) Remove(t *Triple) {
+// 	delete(g.triples, t)
+// }
 
 // All is used to return all triples that match a given pattern of S, P, O objects
 func (g *Graph) All(s Term, p Term, o Term) []*Triple {
@@ -206,6 +209,7 @@ func (g *Graph) Parse(reader io.Reader, mime string) error {
 			return err
 		}
 		for s := range parser.IterTriples() {
+			// fmt.Println("Parsed: ", s.Subject, " ", s.Predicate, " ", s.Object)
 			g.AddTriple(rdf2term(s.Subject), rdf2term(s.Predicate), rdf2term(s.Object))
 		}
 	} else {
