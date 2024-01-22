@@ -3,7 +3,7 @@ module github.com/cem-okulmus/rdf2go-1
 go 1.19
 
 require (
-	github.com/cem-okulmus/gon3-1 v0.2.2
+	github.com/cem-okulmus/gon3-1 v0.2.3
 	github.com/linkeddata/gojsonld v0.0.0-20170418210642-4f5db6791326
 	github.com/stretchr/testify v1.8.2
 )
